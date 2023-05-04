@@ -1,0 +1,40 @@
+{
+  "properties": {
+    "displayName": "Azure Web Application Firewall on Azure Front Door should have the Microsoft_BotManagerRuleSet v1.0 ruleset enabled",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Ensure that Web Application Firewalls associated to Azure Front Doors have the Microsoft_BotManagerRuleSet v1.0 ruleset enabled.",
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy"
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Deny"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/frontdoorWebApplicationFirewallPolicies"
+          },
+          {
+            "field": "Microsoft.Network/frontdoorWebApplicationFirewallPolicies/managedRules.managedRuleSets[*].ruleSetType",
+            "notContains": "Microsoft_BotManagerRuleSet"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}
